@@ -13,7 +13,10 @@
     let interval;
     let borderRadius = 50; // Default border radius
     let containerWidth = 100; // Default container width percentage
+    let containerHeight = 100; // Default container height
     let circleRadius = 45; // Default circle radius
+    let padding = 10; // Default padding
+    let showConfig = false; // Toggle for configuration section
 
     function startTimer() {
         clearInterval(interval);
@@ -65,8 +68,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: calc(2 * var(--circle-radius, 45px) + 20px); /* Adjust height as needed */
-        min-width: calc(2 * var(--circle-radius, 45px) + 20px); /* Ensure it doesn't go smaller than the circle */
+        height: var(--container-height, 100px); /* Default height */
+        min-width: calc(2 * var(--circle-radius, 45px) + var(--padding, 10px)); /* Ensure it doesn't go smaller than the circle */
         width: var(--container-width, 80%); /* Default width */
         border-radius: var(--border-radius, 10px); /* Rounded corners */
     }
@@ -122,16 +125,48 @@
     .slider-container {
         margin-top: 10px;
     }
+
+    .config-section {
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .config-toggle {
+        cursor: pointer;
+        background-color: #f0f0f0;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+    .config-toggle:hover {
+        background-color: #e0e0e0;
+    }
+
+    .icon-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5em;
+        margin: 0 5px;
+    }
+
+    .icon-button:hover {
+        color: #0078d4;
+    }
 </style>
 
-<div class="outer-container" style="--container-width: {containerWidth}%; --circle-radius: {circleRadius}px; --border-radius: {borderRadius}px;">
+<div class="outer-container" style="--container-width: {containerWidth}%; --container-height: {containerHeight}px; --circle-radius: {circleRadius}px; --border-radius: {borderRadius}px; --padding: {padding}px;">
     <div class="inner-container">
         {#if shape === 'bar'}
             <div class="progress-bar" style="width: {progress}%;"></div>
             <p class="timer-text">{formattedTime}</p>
         {:else if shape === 'circle'}
             <div class="circle-container">
-                <svg width="100%" height="100%" viewBox="0 0 {2 * circleRadius + 20} {2 * circleRadius + 20}">
+                <svg width="100%" height="100%" viewBox="0 0 {2 * circleRadius + padding} {2 * circleRadius + padding}">
                     <circle cx="50%" cy="50%" r="{circleRadius}" fill="none" stroke="#e0e0e0" stroke-width="10" />
                     <circle cx="50%" cy="50%" r="{circleRadius}" fill="none" stroke="#76c7c0" stroke-width="10" class="circle" style="stroke-dasharray: {circumference}; stroke-dashoffset: {dashOffset};" />
                 </svg>
@@ -140,19 +175,39 @@
         {/if}
     </div>
 </div>
-<div class="slider-container">
-    <label for="borderRadius">Border Radius: {borderRadius}px</label>
-    <input type="range" id="borderRadius" min="0" max="250" bind:value={borderRadius} />
+
+<div>
+    <button class="icon-button" on:click={stopTimer} title="Pause">❚❚</button>
+    <button class="icon-button" on:click={startTimer} title="Start">►</button>
+    <button class="icon-button" on:click={resetTimer} title="Reset">↻</button>
+    <button class="icon-button" on:click={deleteTimer} title="Delete">❌</button>
 </div>
-<div class="slider-container">
-    <label for="containerWidth">Container Width: {containerWidth}%</label>
-    <input type="range" id="containerWidth" min=0 rmin={Math.ceil((2 * circleRadius + 20) / window.innerWidth * 100)} max="100" bind:value={containerWidth} />
-</div>
-<div class="slider-container">
-    <label for="circleRadius">Circle Radius: {circleRadius}px</label>
-    <input type="range" id="circleRadius" min="20" max="250" bind:value={circleRadius} />
-</div>
-<button on:click={stopTimer}>Stop</button>
-<button on:click={startTimer}>Start</button>
-<button on:click={resetTimer}>Reset</button>
-<button on:click={deleteTimer}>Delete</button>
+
+<button class="config-toggle" on:click={() => showConfig = !showConfig}>
+    {showConfig ? 'Hide Configuration' : 'Show Configuration'}
+</button>
+
+{#if showConfig}
+    <div class="config-section">
+        <div class="slider-container">
+            <label for="borderRadius">Border Radius: {borderRadius}px</label>
+            <input type="range" id="borderRadius" min="0" max="250" bind:value={borderRadius} />
+        </div>
+        <div class="slider-container">
+            <label for="containerWidth">Container Width: {containerWidth}%</label>
+            <input type="range" id="containerWidth" min={Math.ceil((2 * circleRadius + padding) / window.innerWidth * 100)} max="100" bind:value={containerWidth} />
+        </div>
+        <div class="slider-container">
+            <label for="containerHeight">Container Height: {containerHeight}px</label>
+            <input type="range" id="containerHeight" min="50" max="250" bind:value={containerHeight} />
+        </div>
+        <div class="slider-container">
+            <label for="circleRadius">Circle Radius: {circleRadius}px</label>
+            <input type="range" id="circleRadius" min="20" max="250" bind:value={circleRadius} />
+        </div>
+        <div class="slider-container">
+            <label for="padding">Padding: {padding}px</label>
+            <input type="range" id="padding" min="0" max="20" bind:value={padding} />
+        </div>
+    </div>
+{/if}
