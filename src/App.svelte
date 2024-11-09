@@ -1,11 +1,17 @@
 <script>
     import Timer from './components/Timer.svelte';
+    import Modal from './components/Modal.svelte';
     import { v4 as uuidv4 } from 'uuid';
 
     let timers = [];
     let showAddTimerForm = false;
+    let showConfigModal = false;
     let newTimerDuration = 60;
     let newTimerShape = 'bar';
+    let newTimerName = '';
+    let newTimerFont = 'Arial';
+    let showTimerControls = false;
+    let showAddSaveControls = false;
 
     // Load configurations on startup
     loadConfig();
@@ -14,6 +20,7 @@
         timers = [...timers, { 
             id: uuidv4(), 
             TimerConfiguration: {
+                name: newTimerName,
                 duration: newTimerDuration, 
                 shape: newTimerShape, 
                 backgroundColor: '#e0e0e0', 
@@ -22,7 +29,8 @@
                 containerWidth: 100, 
                 containerHeight: 100, 
                 circleRadius: 45, 
-                padding: 10 
+                padding: 10,
+                font: newTimerFont
             } 
         }];
         saveConfig(); // Save config after adding a new timer
@@ -71,14 +79,39 @@
         );
         saveConfig(); // Save config after updating a timer
     }
+
+    function toggleTimerControls() {
+        showTimerControls = !showTimerControls;
+    }
+
+    function toggleAddSaveControls() {
+        showAddSaveControls = !showAddSaveControls;
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 't') {
+            toggleTimerControls();
+        } else if (event.key === 's') {
+            toggleAddSaveControls();
+        }
+    });
 </script>
 
-<button on:click={() => showAddTimerForm = !showAddTimerForm}>
-    {showAddTimerForm ? 'Cancel' : 'Add Timer'}
-</button>
+{#each timers as timer (timer.id)}
+    <Timer 
+        id={timer.id} 
+        TimerConfiguration={timer.TimerConfiguration} 
+        on:delete={deleteTimer} 
+        on:configChange={(e) => updateTimer(timer.id, e.detail)} 
+        showControls={showTimerControls}
+    />
+{/each}
 
-{#if showAddTimerForm}
+<Modal show={showAddTimerForm} title="Add Timer" onClose={() => showAddTimerForm = false}>
     <div class="add-timer-form">
+        <label for="name">Name (optional):</label>
+        <input type="text" id="name" bind:value={newTimerName} />
+
         <label for="duration">Duration (seconds):</label>
         <input type="number" id="duration" bind:value={newTimerDuration} min="1" />
 
@@ -88,22 +121,29 @@
             <option value="circle">Circle</option>
         </select>
 
+        <label for="font">Font:</label>
+        <select id="font" bind:value={newTimerFont}>
+            <option value="Arial">Arial</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Verdana">Verdana</option>
+        </select>
+
         <button on:click={addTimer}>Create Timer</button>
     </div>
-{/if}
+</Modal>
 
-<button on:click={saveConfig}>Save Default Config</button>
-<button on:click={() => saveConfigToFile('timers_config')}>Save Config to File</button>
-<input type="file" accept=".json" on:change={loadConfigFromFile} />
+<Modal show={showConfigModal} title="Configuration" onClose={() => showConfigModal = false}>
+    <!-- Configuration content goes here -->
+</Modal>
 
-{#each timers as timer (timer.id)}
-    <Timer 
-        id={timer.id} 
-        TimerConfiguration={timer.TimerConfiguration} 
-        on:delete={deleteTimer} 
-        on:configChange={(e) => updateTimer(timer.id, e.detail)} 
-    />
-{/each}
+<div class="bottom-controls" style="display: {showAddSaveControls || timers.length === 0 ? 'flex' : 'none'};">
+    <button on:click={() => showAddTimerForm = true}>Add Timer</button>
+    <button on:click={saveConfig}>Save Default Config</button>
+    <button on:click={() => saveConfigToFile('timers_config')}>Save Config to File</button>
+    <input type="file" accept=".json" on:change={loadConfigFromFile} />
+</div>
 
 <style>
     .add-timer-form {
@@ -139,5 +179,14 @@
 
     .add-timer-form button:hover {
         background-color: #005a9e;
+    }
+
+    .bottom-controls {
+        position: fixed;
+        bottom: 10px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
     }
 </style>

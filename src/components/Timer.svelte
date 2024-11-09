@@ -2,6 +2,7 @@
     import { onMount, createEventDispatcher } from 'svelte';
 
     export let TimerConfiguration = {
+        name: '',
         duration: 60,
         shape: 'bar',
         backgroundColor: '#e0e0e0',
@@ -10,13 +11,15 @@
         containerWidth: 100,
         containerHeight: 100,
         circleRadius: 45,
-        padding: 10
+        padding: 10,
+        font: 'Arial'
     };
     export let id;
+    export let showControls = false;
 
     const dispatch = createEventDispatcher();
 
-    let { duration, shape, backgroundColor, progressBarColor, borderRadius, containerWidth, containerHeight, circleRadius, padding } = TimerConfiguration;
+    let { name, duration, shape, backgroundColor, progressBarColor, borderRadius, containerWidth, containerHeight, circleRadius, padding, font } = TimerConfiguration;
 
     let timeLeft = duration;
     let interval;
@@ -53,6 +56,7 @@
 
     function updateConfig() {
         dispatch('configChange', { 
+            name,
             duration, 
             shape, 
             backgroundColor, 
@@ -61,7 +65,8 @@
             containerWidth, 
             containerHeight, 
             circleRadius, 
-            padding 
+            padding,
+            font
         });
     }
 
@@ -121,6 +126,7 @@
         text-align: center;
         padding: 10px;
         font-size: 1.5em;
+        font-family: var(--font, Arial);
     }
 
     .circle-container {
@@ -143,6 +149,7 @@
         transform: translate(-50%, -50%);
         font-size: 1.5em;
         text-align: center;
+        font-family: var(--font, Arial);
     }
 
     .slider-container {
@@ -180,38 +187,53 @@
     .icon-button:hover {
         color: #0078d4;
     }
+
+    .controls-left {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .controls-right {
+        display: flex;
+        justify-content: flex-end;
+        margin-left: auto;
+    }
 </style>
 
 <div class="outer-container" style="--background-color: {backgroundColor}; --container-width: {containerWidth}%; --container-height: {containerHeight}px; --circle-radius: {circleRadius}px; --border-radius: {borderRadius}px; --padding: {padding}px;">
     <div class="inner-container">
+        {#if name}
+            <div class="timer-name" style="font-family: {font};">{name}</div>
+        {/if}
         {#if shape === 'bar'}
             <div class="progress-bar" style="width: {progress}%; background-color: {progressBarColor};"></div>
-            <p class="timer-text">{formattedTime}</p>
+            <p class="timer-text" style="font-family: {font};">{formattedTime}</p>
         {:else if shape === 'circle'}
             <div class="circle-container">
                 <svg width="100%" height="100%" viewBox="0 0 {2 * circleRadius + padding} {2 * circleRadius + padding}">
                     <circle cx="50%" cy="50%" r="{circleRadius}" fill="none" stroke="#e0e0e0" stroke-width="10" />
                     <circle cx="50%" cy="50%" r="{circleRadius}" fill="none" stroke="{progressBarColor}" stroke-width="10" class="circle" style="stroke-dasharray: {circumference}; stroke-dashoffset: {dashOffset};" />
                 </svg>
-                <div class="circle-text">{formattedTime}</div>
+                <div class="circle-text" style="font-family: {font};">{formattedTime}</div>
             </div>
         {/if}
     </div>
 </div>
 
-<div>
-    {#if isRunning}
-        <button class="icon-button" on:click={stopTimer} title="Pause">❚❚</button>
-    {:else}
-        <button class="icon-button" on:click={startTimer} title="Start">►</button>
-    {/if}
-    <button class="icon-button" on:click={resetTimer} title="Reset">↻</button>
-    <button class="icon-button" on:click={deleteTimer} title="Delete">❌</button>
-</div>
-
-<button class="config-toggle" on:click={() => showConfig = !showConfig}>
-    {showConfig ? 'Hide Configuration' : 'Show Configuration'}
-</button>
+{#if showControls}
+    <div class="controls-left">
+        {#if isRunning}
+            <button class="icon-button" on:click={stopTimer} title="Pause">❚❚</button>
+        {:else}
+            <button class="icon-button" on:click={startTimer} title="Start">►</button>
+        {/if}
+        <button class="icon-button" on:click={resetTimer} title="Reset">↻</button>
+    </div>
+    <div class="controls-right">
+        <button class="icon-button" on:click={deleteTimer} title="Delete">❌</button>
+        <button class="icon-button" on:click={() => showConfig = !showConfig} title="Settings">⚙️</button>
+    </div>
+{/if}
 
 {#if showConfig}
     <div class="config-section">
