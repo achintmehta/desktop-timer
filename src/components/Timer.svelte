@@ -1,22 +1,27 @@
-<!-- Timer.svelte -->
 <script>
-    import { onMount } from 'svelte';
-    import { createEventDispatcher } from 'svelte';
+    import { onMount, createEventDispatcher } from 'svelte';
 
-    export let duration;
-    export let shape = 'bar'; // 'bar' or 'circle'
+    export let TimerConfiguration = {
+        duration: 60,
+        shape: 'bar',
+        backgroundColor: '#e0e0e0',
+        progressBarColor: '#76c7c0',
+        borderRadius: 50,
+        containerWidth: 100,
+        containerHeight: 100,
+        circleRadius: 45,
+        padding: 10
+    };
     export let id;
 
     const dispatch = createEventDispatcher();
 
+    let { duration, shape, backgroundColor, progressBarColor, borderRadius, containerWidth, containerHeight, circleRadius, padding } = TimerConfiguration;
+
     let timeLeft = duration;
     let interval;
-    let borderRadius = 50; // Default border radius
-    let containerWidth = 100; // Default container width percentage
-    let containerHeight = 100; // Default container height
-    let circleRadius = 45; // Default circle radius
-    let padding = 10; // Default padding
-    let showConfig = false; // Toggle for configuration section
+    let showConfig = false;
+    let isRunning = false;
 
     function startTimer() {
         clearInterval(interval);
@@ -25,26 +30,43 @@
                 timeLeft -= 1;
             } else {
                 clearInterval(interval);
+                isRunning = false;
             }
         }, 1000);
+        isRunning = true;
     }
 
     function stopTimer() {
         clearInterval(interval);
+        isRunning = false;
     }
 
     function resetTimer() {
         clearInterval(interval);
         timeLeft = duration;
+        isRunning = false;
     }
 
     function deleteTimer() {
         dispatch('delete', { id });
     }
 
+    function updateConfig() {
+        dispatch('configChange', { 
+            duration, 
+            shape, 
+            backgroundColor, 
+            progressBarColor, 
+            borderRadius, 
+            containerWidth, 
+            containerHeight, 
+            circleRadius, 
+            padding 
+        });
+    }
+
     onMount(() => {
         startTimer();
-
         return () => {
             clearInterval(interval);
         };
@@ -62,16 +84,16 @@
 <style>
     .outer-container {
         position: relative;
-        background-color: #e0e0e0;
+        background-color: var(--background-color, #e0e0e0);
         overflow: hidden;
         margin-bottom: 10px;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: var(--container-height, 100px); /* Default height */
-        min-width: calc(2 * var(--circle-radius, 45px) + var(--padding, 10px)); /* Ensure it doesn't go smaller than the circle */
-        width: var(--container-width, 80%); /* Default width */
-        border-radius: var(--border-radius, 10px); /* Rounded corners */
+        height: var(--container-height, 100px);
+        min-width: calc(2 * var(--circle-radius, 45px) + var(--padding, 10px));
+        width: var(--container-width, 80%);
+        border-radius: var(--border-radius, 10px);
     }
 
     .inner-container {
@@ -89,7 +111,7 @@
         top: 0;
         left: 0;
         height: 100%;
-        background-color: #76c7c0;
+        background-color: var(--progress-bar-color, #76c7c0);
         transition: width 1s linear;
     }
 
@@ -111,6 +133,7 @@
 
     .circle {
         transition: stroke-dashoffset 1s linear;
+        stroke: var(--progress-bar-color, #76c7c0);
     }
 
     .circle-text {
@@ -159,16 +182,16 @@
     }
 </style>
 
-<div class="outer-container" style="--container-width: {containerWidth}%; --container-height: {containerHeight}px; --circle-radius: {circleRadius}px; --border-radius: {borderRadius}px; --padding: {padding}px;">
+<div class="outer-container" style="--background-color: {backgroundColor}; --container-width: {containerWidth}%; --container-height: {containerHeight}px; --circle-radius: {circleRadius}px; --border-radius: {borderRadius}px; --padding: {padding}px;">
     <div class="inner-container">
         {#if shape === 'bar'}
-            <div class="progress-bar" style="width: {progress}%;"></div>
+            <div class="progress-bar" style="width: {progress}%; background-color: {progressBarColor};"></div>
             <p class="timer-text">{formattedTime}</p>
         {:else if shape === 'circle'}
             <div class="circle-container">
                 <svg width="100%" height="100%" viewBox="0 0 {2 * circleRadius + padding} {2 * circleRadius + padding}">
                     <circle cx="50%" cy="50%" r="{circleRadius}" fill="none" stroke="#e0e0e0" stroke-width="10" />
-                    <circle cx="50%" cy="50%" r="{circleRadius}" fill="none" stroke="#76c7c0" stroke-width="10" class="circle" style="stroke-dasharray: {circumference}; stroke-dashoffset: {dashOffset};" />
+                    <circle cx="50%" cy="50%" r="{circleRadius}" fill="none" stroke="{progressBarColor}" stroke-width="10" class="circle" style="stroke-dasharray: {circumference}; stroke-dashoffset: {dashOffset};" />
                 </svg>
                 <div class="circle-text">{formattedTime}</div>
             </div>
@@ -177,8 +200,11 @@
 </div>
 
 <div>
-    <button class="icon-button" on:click={stopTimer} title="Pause">❚❚</button>
-    <button class="icon-button" on:click={startTimer} title="Start">►</button>
+    {#if isRunning}
+        <button class="icon-button" on:click={stopTimer} title="Pause">❚❚</button>
+    {:else}
+        <button class="icon-button" on:click={startTimer} title="Start">►</button>
+    {/if}
     <button class="icon-button" on:click={resetTimer} title="Reset">↻</button>
     <button class="icon-button" on:click={deleteTimer} title="Delete">❌</button>
 </div>
@@ -190,24 +216,32 @@
 {#if showConfig}
     <div class="config-section">
         <div class="slider-container">
+            <label for="backgroundColor">Background Color:</label>
+            <input type="color" id="backgroundColor" bind:value={backgroundColor} on:change={updateConfig} />
+        </div>
+        <div class="slider-container">
+            <label for="progressBarColor">Progress Bar Color:</label>
+            <input type="color" id="progressBarColor" bind:value={progressBarColor} on:change={updateConfig} />
+        </div>
+        <div class="slider-container">
             <label for="borderRadius">Border Radius: {borderRadius}px</label>
-            <input type="range" id="borderRadius" min="0" max="250" bind:value={borderRadius} />
+            <input type="range" id="borderRadius" min="0" max="250" bind:value={borderRadius} on:input={updateConfig} />
         </div>
         <div class="slider-container">
             <label for="containerWidth">Container Width: {containerWidth}%</label>
-            <input type="range" id="containerWidth" min={Math.ceil((2 * circleRadius + padding) / window.innerWidth * 100)} max="100" bind:value={containerWidth} />
+            <input type="range" id="containerWidth" min={Math.ceil((2 * circleRadius + padding) / window.innerWidth * 100)} max="100" bind:value={containerWidth} on:input={updateConfig} />
         </div>
         <div class="slider-container">
             <label for="containerHeight">Container Height: {containerHeight}px</label>
-            <input type="range" id="containerHeight" min="50" max="250" bind:value={containerHeight} />
+            <input type="range" id="containerHeight" min="50" max="250" bind:value={containerHeight} on:input={updateConfig} />
         </div>
         <div class="slider-container">
             <label for="circleRadius">Circle Radius: {circleRadius}px</label>
-            <input type="range" id="circleRadius" min="20" max="250" bind:value={circleRadius} />
+            <input type="range" id="circleRadius" min="20" max="250" bind:value={circleRadius} on:input={updateConfig} />
         </div>
         <div class="slider-container">
             <label for="padding">Padding: {padding}px</label>
-            <input type="range" id="padding" min="0" max="20" bind:value={padding} />
+            <input type="range" id="padding" min="0" max="20" bind:value={padding} on:input={updateConfig} />
         </div>
     </div>
 {/if}
