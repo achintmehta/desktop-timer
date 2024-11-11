@@ -1,0 +1,123 @@
+.outer-container {
+    position: relative;
+    background-color: var(--background-color, #e0e0e0);
+    overflow: hidden;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: var(--container-height, 100px);
+    min-width: calc(2 * var(--circle-radius, 45px) + var(--padding, 10px));
+    width: var(--container-width, 80%);
+    border-radius: var(--border-radius, 10px);
+}
+
+.inner-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: var(--progress-bar-color, #76c7c0);
+    transition: width 1s linear;
+}
+
+.timer-text {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 10px;
+    font-size: 1.5em;
+    font-family: var(--font, Arial);
+}
+
+.circle-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(2 * var(--circle-radius, 45px));
+    height: calc(2 * var(--circle-radius, 45px));
+}
+
+.circle {
+    transition: stroke-dashoffset 1s linear;
+    stroke: var(--progress-bar-color, #76c7c0);
+}
+
+.circle-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    text-align: center;
+    font-family: var(--font, Arial);
+}
+
+.slider-container {
+    margin-top: 5px;
+}
+
+.config-section {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--progress-bar-color, #76c7c0);
+}
+
+.config-toggle {
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.config-toggle:hover {
+    background-color: #e0e0e0;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    margin: 5px 0;
+}
+
+.icon-button:hover {
+    color: #0078d4;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between; /* Distribute space between the two groups */
+    align-items: center;
+    width: 100%; /* Ensure the controls take up the full width */
+}
+
+.left-buttons-container {
+    flex: 1; /* Allow this container to grow and take up available space */
+    display: flex;
+    justify-content: center; /* Center the left buttons within this container */
+}
+
+.left-buttons, .right-buttons {
+    display: flex;
+    gap: 10px; /* Adjust the spacing between buttons as needed */
+}
+
+.right-buttons {
+    margin-left: auto; /* Push the right buttons to the far right */
+}

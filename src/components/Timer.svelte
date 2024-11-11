@@ -1,5 +1,6 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
+    import '../styles/Timer.css';
 
     export let TimerConfiguration = {
         name: '',
@@ -81,124 +82,10 @@
     $: circumference = 2 * Math.PI * circleRadius;
     $: dashOffset = circumference - (circumference * progress) / 100;
 
-    $: formattedTime = timeLeft > 60 
+    $: formattedTime = (timeLeft > 60 
         ? `${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')}` 
-        : timeLeft;
+        : timeLeft);
 </script>
-
-<style>
-    .outer-container {
-        position: relative;
-        background-color: var(--background-color, #e0e0e0);
-        overflow: hidden;
-        margin-bottom: 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: var(--container-height, 100px);
-        min-width: calc(2 * var(--circle-radius, 45px) + var(--padding, 10px));
-        width: var(--container-width, 80%);
-        border-radius: var(--border-radius, 10px);
-    }
-
-    .inner-container {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .progress-bar {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        background-color: var(--progress-bar-color, #76c7c0);
-        transition: width 1s linear;
-    }
-
-    .timer-text {
-        position: relative;
-        z-index: 1;
-        text-align: center;
-        padding: 10px;
-        font-size: 1.5em;
-        font-family: var(--font, Arial);
-    }
-
-    .circle-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: calc(2 * var(--circle-radius, 45px));
-        height: calc(2 * var(--circle-radius, 45px));
-    }
-
-    .circle {
-        transition: stroke-dashoffset 1s linear;
-        stroke: var(--progress-bar-color, #76c7c0);
-    }
-
-    .circle-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 1.5em;
-        text-align: center;
-        font-family: var(--font, Arial);
-    }
-
-    .slider-container {
-        margin-top: 10px;
-    }
-
-    .config-section {
-        margin-top: 10px;
-        border: 1px solid #ccc;
-        padding: 10px;
-        border-radius: 5px;
-    }
-
-    .config-toggle {
-        cursor: pointer;
-        background-color: #f0f0f0;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        margin-top: 10px;
-    }
-
-    .config-toggle:hover {
-        background-color: #e0e0e0;
-    }
-
-    .icon-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 1.5em;
-        margin: 0 5px;
-    }
-
-    .icon-button:hover {
-        color: #0078d4;
-    }
-
-    .controls-left {
-        display: flex;
-        justify-content: flex-start;
-    }
-
-    .controls-right {
-        display: flex;
-        justify-content: flex-end;
-        margin-left: auto;
-    }
-</style>
 
 <div class="outer-container" style="--background-color: {backgroundColor}; --container-width: {containerWidth}%; --container-height: {containerHeight}px; --circle-radius: {circleRadius}px; --border-radius: {borderRadius}px; --padding: {padding}px;">
     <div class="inner-container">
@@ -221,49 +108,94 @@
 </div>
 
 {#if showControls}
-    <div class="controls-left">
-        {#if isRunning}
-            <button class="icon-button" on:click={stopTimer} title="Pause">❚❚</button>
-        {:else}
-            <button class="icon-button" on:click={startTimer} title="Start">►</button>
-        {/if}
-        <button class="icon-button" on:click={resetTimer} title="Reset">↻</button>
-    </div>
-    <div class="controls-right">
-        <button class="icon-button" on:click={deleteTimer} title="Delete">❌</button>
-        <button class="icon-button" on:click={() => showConfig = !showConfig} title="Settings">⚙️</button>
+    <div class="controls">
+        <div class="left-buttons-container">
+            <div class="left-buttons">
+                {#if isRunning}
+                    <button class="icon-button" on:click={stopTimer} title="Pause">❚❚</button>
+                {:else}
+                    <button class="icon-button" on:click={startTimer} title="Start">►</button>
+                {/if}
+                <button class="icon-button" on:click={resetTimer} title="Reset">↻</button>
+            </div>
+        </div>
+        <div class="right-buttons">
+            <button class="icon-button" on:click={deleteTimer} title="Delete">❌</button>
+            <button class="icon-button" on:click={() => showConfig = !showConfig} title="Settings">⚙️</button>
+        </div>
     </div>
 {/if}
+
 
 {#if showConfig}
     <div class="config-section">
         <div class="slider-container">
-            <label for="backgroundColor">Background Color:</label>
+            <label for="name">Name:</label>
+            <input type="text" id="name" bind:value={name} on:input={updateConfig} />
+        </div>
+        <div class="slider-container">
+            <label for="backgroundColor">Background:</label>
             <input type="color" id="backgroundColor" bind:value={backgroundColor} on:change={updateConfig} />
         </div>
         <div class="slider-container">
-            <label for="progressBarColor">Progress Bar Color:</label>
+            <label for="progressBarColor">Progress Bar:</label>
             <input type="color" id="progressBarColor" bind:value={progressBarColor} on:change={updateConfig} />
         </div>
         <div class="slider-container">
-            <label for="borderRadius">Border Radius: {borderRadius}px</label>
+            <label for="borderRadius">Border Radius:</label>
             <input type="range" id="borderRadius" min="0" max="250" bind:value={borderRadius} on:input={updateConfig} />
         </div>
         <div class="slider-container">
-            <label for="containerWidth">Container Width: {containerWidth}%</label>
+            <label for="containerWidth">Width:</label>
             <input type="range" id="containerWidth" min={Math.ceil((2 * circleRadius + padding) / window.innerWidth * 100)} max="100" bind:value={containerWidth} on:input={updateConfig} />
         </div>
         <div class="slider-container">
-            <label for="containerHeight">Container Height: {containerHeight}px</label>
+            <label for="containerHeight">Height:</label>
             <input type="range" id="containerHeight" min="50" max="250" bind:value={containerHeight} on:input={updateConfig} />
         </div>
         <div class="slider-container">
-            <label for="circleRadius">Circle Radius: {circleRadius}px</label>
+            <label for="circleRadius">Circle Radius:</label>
             <input type="range" id="circleRadius" min="20" max="250" bind:value={circleRadius} on:input={updateConfig} />
         </div>
         <div class="slider-container">
-            <label for="padding">Padding: {padding}px</label>
+            <label for="padding">Padding:</label>
             <input type="range" id="padding" min="0" max="20" bind:value={padding} on:input={updateConfig} />
+        </div>
+        <div class="slider-container">
+            <label for="font">Font:</label>
+            <select id="font" bind:value={font} on:change={updateConfig}>
+                <option value="Arial">Arial</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Verdana">Verdana</option>
+                <option value="'Henny Penny', sans-serif">Henny Penny</option>
+                <option value="'Eater', sans-serif">Eater</option>
+                <option value="'Gugi', sans-serif">Gugi</option>
+                <option value="'HomemadeApple', sans-serif">Homemade Apple</option>
+                <option value="'Kalam', sans-serif">Kalam</option>
+                <option value="'KeaniaOne', sans-serif">Keania One</option>
+                <option value="'Knewave', sans-serif">Knewave</option>
+                <option value="'Kranky', sans-serif">Kranky</option>
+                <option value="'Leckerli', sans-serif">Leckerli</option>
+                <option value="'MacondoSwashCaps', sans-serif">Macondo Swash Caps</option>
+                <option value="'Monoton', sans-serif">Monoton</option>
+                <option value="'MrsSaintDelafield', sans-serif">Mrs Saint Delafield</option>
+                <option value="'MsMadi', sans-serif">Ms Madi</option>
+                <option value="'Nosifer', sans-serif">Nosifer</option>
+                <option value="'Orbitron', sans-serif">Orbitron</option>
+                <option value="'PermanentMarker', sans-serif">Permanent Marker</option>
+                <option value="'PinyonScript', sans-serif">Pinyon Script</option>
+                <option value="'Qwigley', sans-serif">Qwigley</option>
+                <option value="'ReenieBeanie', sans-serif">Reenie Beanie</option>
+                <option value="'Revalia', sans-serif">Revalia</option>
+                <option value="'Rubiks80sFade', sans-serif">Rubiks 80s Fade</option>
+                <option value="'Silkscreen', sans-serif">Silkscreen</option>
+                <option value="'SpecialElite', sans-serif">Special Elite</option>
+                <option value="'Tourney', sans-serif">Tourney</option>
+                <option value="'TrainOne', sans-serif">Train One</option>
+                <option value="'TulpenOne', sans-serif">Tulpen One</option>
+            </select>
         </div>
     </div>
 {/if}

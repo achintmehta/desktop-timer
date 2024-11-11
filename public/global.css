@@ -61,3 +61,159 @@ button:not(:disabled):active {
 button:focus {
 	border-color: #666;
 }
+
+@font-face {
+    font-family: 'Gugi';
+    src: url('./fonts/Gugi/Gugi-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Eater';
+    src: url('./fonts/Eater/Eater-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'HennyPenny';
+    src: url('./fonts/Henny_Penny/HennyPenny-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'HomemadeApple';
+    src: url('./fonts/Homemade_apple/HomemadeApple-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Kalam';
+    src: url('./fonts/Kalam/Kalam-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'KeaniaOne';
+    src: url('./fonts/Keania_One/KeaniaOne-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Knewave';
+    src: url('./fonts/Knewave/Knewave-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Kranky';
+    src: url('./fonts/Kranky/Kranky-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Leckerli';
+    src: url('./fonts/Leckerli_One/LeckerliOne-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'MacondoSwashCaps';
+    src: url('./fonts/Macondo_Swash_Caps/MacondoSwashCaps-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Monoton';
+    src: url('./fonts/Monoton/Monoton-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'MrsSaintDelafield';
+    src: url('./fonts/Mrs_Saint_Delafield/MrsSaintDelafield-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'MsMadi';
+    src: url('./fonts/Ms_Madi/MsMadi-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Nosifer';
+    src: url('./fonts/Nosifer/Nosifer-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Orbitron';
+    src: url('./fonts/Orbitron/Orbitron-VariableFont_wght.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'PermanentMarker';
+    src: url('./fonts/Permanent_Marker/PermanentMarker-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'PinyonScript';
+    src: url('./fonts/Pinyon_Script/PinyonScript-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Qwigley';
+    src: url('./fonts/Qwigley/Qwigley-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'ReenieBeanie';
+    src: url('./fonts/Reenie_Beanie/ReenieBeanie-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Revalia';
+    src: url('./fonts/Revalia/Revalia-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Rubiks80sFade';
+    src: url('./fonts/Rubik_80s_Fade/Rubik80sFade-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Silkscreen';
+    src: url('./fonts/Silkscreen/Silkscreen-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'SpecialElite';
+    src: url('./fonts/Special_Elite/SpecialElite-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Tourney';
+    src: url('./fonts/Tourney/Tourney-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'TrainOne';
+    src: url('./fonts/Train_One/TrainOne-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'TulpenOne';
+    src: url('./fonts/Tulpen_One/TulpenOne-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
