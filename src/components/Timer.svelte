@@ -3,7 +3,7 @@
     import '../styles/Timer.css';
 
     export let TimerConfiguration = {
-        name: '',
+        message: '',
         duration: 60,
         shape: 'bar',
         backgroundColor: '#e0e0e0',
@@ -13,14 +13,16 @@
         containerHeight: 100,
         circleRadius: 45,
         padding: 10,
-        font: 'Arial'
+        font: 'Arial',
+        messageColor: '#000', 
+        messagePadding: 10
     };
     export let id;
     export let showControls = false;
 
     const dispatch = createEventDispatcher();
 
-    let { name, duration, shape, backgroundColor, progressBarColor, borderRadius, containerWidth, containerHeight, circleRadius, padding, font } = TimerConfiguration;
+    let { message, duration, shape, backgroundColor, progressBarColor, borderRadius, containerWidth, containerHeight, circleRadius, padding, font, messageColor, messagePadding } = TimerConfiguration;
 
     let timeLeft = duration;
     let interval;
@@ -57,7 +59,7 @@
 
     function updateConfig() {
         dispatch('configChange', { 
-            name,
+            message,
             duration, 
             shape, 
             backgroundColor, 
@@ -67,7 +69,9 @@
             containerHeight, 
             circleRadius, 
             padding,
-            font
+            font,
+            messageColor,
+            messagePadding
         });
     }
 
@@ -87,25 +91,29 @@
         : timeLeft);
 </script>
 
-<div class="outer-container" style="--background-color: {backgroundColor}; --container-width: {containerWidth}%; --container-height: {containerHeight}px; --circle-radius: {circleRadius}px; --border-radius: {borderRadius}px; --padding: {padding}px;">
-    <div class="inner-container">
-        {#if name}
-            <div class="timer-name" style="font-family: {font};">{name}</div>
-        {/if}
-        {#if shape === 'bar'}
-            <div class="progress-bar" style="width: {progress}%; background-color: {progressBarColor};"></div>
-            <p class="timer-text" style="font-family: {font};">{formattedTime}</p>
-        {:else if shape === 'circle'}
-            <div class="circle-container">
-                <svg width="100%" height="100%" viewBox="0 0 {2 * circleRadius + padding} {2 * circleRadius + padding}">
-                    <circle cx="50%" cy="50%" r="{circleRadius}" fill="none" stroke="#e0e0e0" stroke-width="10" />
-                    <circle cx="50%" cy="50%" r="{circleRadius}" fill="none" stroke="{progressBarColor}" stroke-width="10" class="circle" style="stroke-dasharray: {circumference}; stroke-dashoffset: {dashOffset};" />
-                </svg>
-                <div class="circle-text" style="font-family: {font};">{formattedTime}</div>
-            </div>
-        {/if}
+<div class="controls">
+    {#if message}
+        <div class="message-text" style="font-family: {font}; color: {messageColor}; padding: {messagePadding};">{message}</div> <!-- Moved message above the progress bar -->
+    {/if}
+
+    <div class="outer-container" style="--background-color: {backgroundColor}; --container-width: {containerWidth}%; --container-height: {containerHeight}px; --circle-radius: {circleRadius}px; --border-radius: {borderRadius}px; --padding: {padding}px;">
+        <div class="inner-container">
+            {#if shape === 'bar'}
+                <div class="progress-bar" style="width: {progress}%; background-color: {progressBarColor};"></div>
+                <p class="timer-text" style="font-family: {font};">{formattedTime}</p>
+            {:else if shape === 'circle'}
+                <div class="circle-container">
+                    <svg width="100%" height="100%" viewBox="0 0 {2 * circleRadius + padding} {2 * circleRadius + padding}">
+                        <circle cx="50%" cy="50%" r="{circleRadius}" fill="none" stroke="#e0e0e0" stroke-width="10" />
+                        <circle cx="50%" cy="50%" r="{circleRadius}" fill="none" stroke="{progressBarColor}" stroke-width="10" class="circle" style="stroke-dasharray: {circumference}; stroke-dashoffset: {dashOffset};" />
+                    </svg>
+                    <div class="circle-text" style="font-family: {font};">{formattedTime}</div>
+                </div>
+            {/if}
+        </div>
     </div>
 </div>
+
 
 {#if showControls}
     <div class="controls">
@@ -126,12 +134,11 @@
     </div>
 {/if}
 
-
 {#if showConfig}
     <div class="config-section">
         <div class="slider-container">
-            <label for="name">Name:</label>
-            <input type="text" id="name" bind:value={name} on:input={updateConfig} />
+            <label for="message">Message:</label>
+            <input type="text" id="message" bind:value={message} on:input={updateConfig} />
         </div>
         <div class="slider-container">
             <label for="backgroundColor">Background:</label>
@@ -140,6 +147,14 @@
         <div class="slider-container">
             <label for="progressBarColor">Progress Bar:</label>
             <input type="color" id="progressBarColor" bind:value={progressBarColor} on:change={updateConfig} />
+        </div>
+        <div class="slider-container">
+            <label for="messageColor">Message Color:</label>
+            <input type="color" id="messageColor" bind:value={messageColor} on:change={updateConfig} />
+        </div>
+        <div class="slider-container">
+            <label for="messagePadding">Message Padding:</label>
+            <input type="range" id="messagePadding"  min="0" max="250" bind:value={messagePadding} on:change={updateConfig} />
         </div>
         <div class="slider-container">
             <label for="borderRadius">Border Radius:</label>
