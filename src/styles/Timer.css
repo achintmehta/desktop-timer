@@ -72,6 +72,7 @@
 .circle {
     transition: stroke-dashoffset 1s linear;
     stroke: var(--progress-bar-color, #76c7c0);
+    stroke-width: var(--circle-stroke-width, 10px);
 }
 
 .circle-text {

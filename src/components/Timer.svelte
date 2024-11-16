@@ -13,6 +13,7 @@
         containerWidth: 100,
         containerHeight: 100,
         circleRadius: 45,
+        circleStrokeWidth: 10,
         padding: 10,
         font: "Arial",
         messageColor: "#000",
@@ -38,6 +39,7 @@
         containerHeight,
         circleRadius,
         circleWidth,
+        circleStrokeWidth,
         padding,
         font,
         messageColor,
@@ -133,13 +135,13 @@
 
         <div
             class="outer-container"
-            style="--background-color: {backgroundColor}; --container-width: {containerWidth}%; --container-height: {containerHeight}px; --circle-radius: {circleRadius}px; --border-radius: {borderRadius}px; --padding: {padding}px; --circle-width: {circleWidth}px; margin-bottom: {timerMargin}px;"
+            style="--background-color: {backgroundColor}; --progress-bar-color: {progressBarColor}; --container-width: {containerWidth}%; --container-height: {containerHeight}px; --circle-radius: {circleRadius}px; --border-radius: {borderRadius}px; --padding: {padding}px; --circle-width: {circleWidth}px; --circle-stroke-width: {circleStrokeWidth}px; margin-bottom: {timerMargin}px;"
         >
             <div class="inner-container">
                 {#if shape === "bar"}
                     <div
                         class="progress-bar"
-                        style="width: {progress}%; background-color: {progressBarColor};"
+                        style="width: {progress}%; background-color: var(--progress-bar-color);"
                     ></div>
                     <p
                         class="timer-text"
@@ -147,7 +149,6 @@
                     >
                         {formattedTime}
                     </p>
-                    <!-- Updated -->
                 {:else if shape === "circle"}
                     <div class="circle-container">
                         <svg
@@ -162,16 +163,8 @@
                                 cy="50%"
                                 r={circleRadius}
                                 fill="none"
-                                stroke="#e0e0e0"
-                                stroke-width="10"
-                            />
-                            <circle
-                                cx="50%"
-                                cy="50%"
-                                r={circleRadius}
-                                fill="none"
-                                stroke={progressBarColor}
-                                stroke-width="10"
+                                stroke="var(--progress-bar-color)"
+                                stroke-width={circleStrokeWidth}
                                 class="circle"
                                 style="stroke-dasharray: {circumference}; stroke-dashoffset: {dashOffset};"
                             />
@@ -182,7 +175,6 @@
                         >
                             {formattedTime}
                         </div>
-                        <!-- Updated -->
                     </div>
                 {/if}
             </div>
@@ -239,6 +231,7 @@
             bind:containerWidth
             bind:containerHeight
             bind:circleRadius
+            bind:circleStrokeWidth
             bind:padding
             bind:font
             bind:messageColor

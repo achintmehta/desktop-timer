@@ -30,6 +30,7 @@
                 containerWidth: 100, 
                 containerHeight: 100, 
                 circleRadius: 45, 
+                circleStrokeWidth: 10,
                 padding: 10,
                 font: newTimerFont,
                 messagePadding: 10,
