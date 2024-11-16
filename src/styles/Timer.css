@@ -29,6 +29,7 @@
     min-width: calc(2 * var(--circle-radius, 45px) + var(--padding, 10px));
     width: var(--container-width, 80%);
     border-radius: var(--border-radius, 10px);
+    
 }
 
 .inner-container {

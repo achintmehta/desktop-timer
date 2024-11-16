@@ -2,6 +2,7 @@
     import Timer from './components/Timer.svelte';
     import Modal from './components/Modal.svelte';
     import { v4 as uuidv4 } from 'uuid';
+    import { loop_guard } from 'svelte/internal';
 
     let timers = [];
     let showAddTimerForm = false;
@@ -30,7 +31,9 @@
                 containerHeight: 100, 
                 circleRadius: 45, 
                 padding: 10,
-                font: newTimerFont
+                font: newTimerFont,
+                messagePadding: 10,
+                timerMargin: 10
             } 
         }];
         saveConfig(); // Save config after adding a new timer
@@ -81,9 +84,13 @@
     }
 
     function toggleTimerControls() {
-        showTimerControls = !showTimerControls;
+    showTimerControls = !showTimerControls;
+    if (!showTimerControls) {
+        timers.forEach(timer => {
+            timer.showConfig = false; // Hide config for all timers
+        });
     }
-
+}
     function toggleAddSaveControls() {
         showAddSaveControls = !showAddSaveControls;
     }
