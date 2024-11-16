@@ -1,0 +1,36 @@
+/* TimerControls.css */
+.slider-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+.slider-container label {
+    flex: 1;
+}
+.slider-container input,
+.slider-container select {
+    flex: 2;
+}
+.config-section {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+.config-toggle {
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+.config-toggle:hover {
+    background-color: #e0e0e0;
+}
+.symbol {
+    font-size: 1.2em;
+    margin-right: 5px;
+}

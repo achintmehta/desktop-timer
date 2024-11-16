@@ -33,7 +33,10 @@
                 padding: 10,
                 font: newTimerFont,
                 messagePadding: 10,
-                timerMargin: 10
+                timerMargin: 10,
+                timerTextColor: '#000',
+                timerTextFontSize: 16,
+                messageTextFontSize: 16
             } 
         }];
         saveConfig(); // Save config after adding a new timer
